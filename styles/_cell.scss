@@ -1,2 +1,33 @@
 @use "./variables" as *;
-@use "./mixins" as *;
+@use "./mixin" as *;
+
+.cell {
+    width: $cell-size;
+    height: $cell-size;
+
+    align-self: center;
+    justify-self: center;
+
+    font-size: 0.8 * $cell-size;
+    text-align: center;
+
+
+
+
+    &--opened{
+        background-color: grey;
+
+    }
+
+    &--unopened {
+        background-color: black;
+        div {
+            display: none;
+        }
+    }
+
+    &--flagged {
+        background-color: red;
+    }
+}
+
