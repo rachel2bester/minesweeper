@@ -37,7 +37,7 @@ const getSurrounding = (coords, height, width) => {
 
     for (let i = -1; i <= 1; i++) {
         for (let j = -1; j <= 1; j++) {
-            if (i != j &&
+            if (!(i === 0 && j === 0) &&
                 coords.y + i >= 0 && coords.y + i < height && 
                 coords.x + j >= 0 && coords.x + j < width) { //if not original cell and within field
                 const cellCoords = {
