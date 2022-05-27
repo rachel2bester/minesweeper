@@ -3,10 +3,6 @@
 
 .field {
     display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(8, 1fr);
     background-color: green;
-    width: ($cell-size + 5) * 10;
-    height: ($cell-size + 5) * 8;
     padding: 10px;
 }
