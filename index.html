@@ -9,8 +9,20 @@
 </head>
 <body>
     <h1>Minesweeper</h1>
+    <form>
+        <label for="height">Height</label> 
+        <input id="height" type="number" min="5" max="80" step = "1">
+        <label for="width">Width</label> 
+        <input id="width" type="number" min="5" max="80" step = "1">
+        <label for="mines">Mines</label> 
+        <input id="mines" type="number" min="5" max="80" step = "1">
+        <button type="button" id="generate-button">Generate</button>
+        
+    </form>
+
 
     <div class="field"></div>
+
 
     <script src="script.js"></script>
 </body>

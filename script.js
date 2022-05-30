@@ -1,6 +1,14 @@
 const field = document.querySelector(".field");
-
-
+const generateButton = document.querySelector("#generate-button");
+const heightInput = document.querySelector("#height");
+const widthInput = document.querySelector("#width");
+const minesInput = document.querySelector("#mines");
+let numOfMines = 0;
+const grid = [];
+const cellSize = 40;
+let height = 0;
+let width = 0;
+let cells = [];
 
 
 const getCoordinates = (cell, cells) => {
@@ -47,13 +55,7 @@ const isIn = (coords, coordsList) => {
     return false;
 }
 
-const width = 20;
-const height = 20;
-const numOfMines = 50;
-const grid = [];
-const cellSize = 40;
-
-const generateGrid = (event) => {
+const generateMines = (event) => {
     const click = getCoordinates(event.target, cells);
 
     //generateMines
@@ -79,22 +81,15 @@ const generateGrid = (event) => {
     }
     grid.forEach((row) => console.log(row.join(" ")))
 
-
     for (let y = 0; y < width; y++) {
         for (let x = 0;  x < height; x++) {
-            //new html object
             cells[y][x].innerText = grid[y][x];
             cells[y][x].classList.add(`cell--${grid[y][x] === "x" ? "mine" : grid[y][x]}`)
         }
     }
+    console.log("here")
 
-    let elements = document.querySelectorAll(".cell");
-    for (let y = 0; y < width; y++) {
-        for (let x = 0;  x < height; x++) {
-            cells[y][x] = elements[x + width * y];
-        }
-    }
-    console.log(document.querySelector(".cell").style.width)
+    cells.forEach((row) => row.forEach((cell) => cell.removeEventListener("click", generateMines)));
 
     cells.forEach((row) => row.forEach((cell) => cell.addEventListener("click", onCellClick)));
     reveal(cells[click.y][click.x])
@@ -130,43 +125,56 @@ const onMine = () => {
     console.log(cells)
 }
 
-let cells = [];
+const generateGrid = (event) => {
+    generateButton.removeEventListener("click", generateGrid)
+    
+    height = heightInput.value;
+    width = widthInput.value;
+    numOfMines = minesInput.value;
 
-for (let y = 0; y < width; y++) {
-    cells.push([]);
-    for (let x = 0;  x < height; x++) {
+    field.style.visibility = "visible";
 
-        //new html object
-        field.innerHTML += `
-            <div class="cell cell--unopened">
-                <div></div>
-            </div>
-        `;
-        cells[y].push(null);
+    for (let y = 0; y < width; y++) {
+        cells.push([]);
+        for (let x = 0;  x < height; x++) {
+    
+            //new html object
+            field.innerHTML += `
+                <div class="cell cell--unopened">
+                    <div></div>
+                </div>
+            `;
+            cells[y].push(null);
+        }
     }
+    
+    const elements = document.querySelectorAll(".cell");
+    for (let y = 0; y < width; y++) {
+        for (let x = 0;  x < height; x++) {
+            cells[y][x] = elements[x + width * y];
+        }
+    }
+    
+    field.style.gridTemplateColumns = `repeat(${width}, 1fr)`;
+    field.style.gridTemplateRows = `repeat(${height}, 1fr)`;
+    
+    
+    field.style.width = `${width * (cellSize + 5)}px`
+    field.style.height = `${height * (cellSize + 5)}px`;
+    
+    
+    for (let y = 0; y < width; y++) {
+        grid.push([]);
+        for (let x = 0;  x < height; x++) {
+            grid[y].push(0);
+        }
+    }
+    console.log("here")
+    cells.forEach((row) => row.forEach((cell) => cell.addEventListener("click", generateMines)));
+    
 }
 
-let elements = document.querySelectorAll(".cell");
-for (let y = 0; y < width; y++) {
-    for (let x = 0;  x < height; x++) {
-        cells[y][x] = elements[x + width * y];
-    }
-}
-console.log(document.querySelector(".cell").style.width)
+// generateGrid()
 
-field.style.gridTemplateColumns = `repeat(${width}, 1fr)`;
-field.style.gridTemplateRows = `repeat(${height}, 1fr)`;
-
-
-field.style.width = `${width * (cellSize + 5)}px`
-field.style.height = `${height * (cellSize + 5)}px`;
-
-
-for (let y = 0; y < width; y++) {
-    grid.push([]);
-    for (let x = 0;  x < height; x++) {
-        grid[y].push(0);
-    }
-}
-
-cells.forEach((row) => row.forEach((cell) => cell.addEventListener("click", generateGrid)));
+window.addEventListener('load', () => console.log("hi"))
+generateButton.addEventListener("click", generateGrid)
