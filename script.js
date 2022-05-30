@@ -54,10 +54,7 @@ const grid = [];
 const cellSize = 40;
 
 const generateGrid = (event) => {
-    //generate grid
-
     const click = getCoordinates(event.target, cells);
-
 
     //generateMines
     for (let i = 0; i < numOfMines; i++){
@@ -70,7 +67,6 @@ const generateGrid = (event) => {
             x = Math.floor(Math.random() * grid[0].length);
             y = Math.floor(Math.random() * grid.length);
         }
-
         grid[y][x] = "x"
         console.log("added x"+x+" y"+y)
 
@@ -83,19 +79,12 @@ const generateGrid = (event) => {
     }
     grid.forEach((row) => console.log(row.join(" ")))
 
-    cells = []
-    field.innerHTML = "";
 
     for (let y = 0; y < width; y++) {
-        cells.push([]);
         for (let x = 0;  x < height; x++) {
             //new html object
-            field.innerHTML += `
-                <div class="cell cell--unopened cell--${grid[y][x] === "x" ? "mine" : grid[y][x]}"">
-                    <div>${grid[y][x]}</div>
-                </div>
-            `;
-            cells[y].push(null);
+            cells[y][x].innerText = grid[y][x];
+            cells[y][x].classList.add(`cell--${grid[y][x] === "x" ? "mine" : grid[y][x]}`)
         }
     }
 
@@ -106,13 +95,6 @@ const generateGrid = (event) => {
         }
     }
     console.log(document.querySelector(".cell").style.width)
-
-    field.style.gridTemplateColumns = `repeat(${width}, 1fr)`;
-    field.style.gridTemplateRows = `repeat(${height}, 1fr)`;
-
-
-    field.style.width = `${width * (cellSize + 5)}px`
-    field.style.height = `${height * (cellSize + 5)}px`;
 
     cells.forEach((row) => row.forEach((cell) => cell.addEventListener("click", onCellClick)));
     reveal(cells[click.y][click.x])
@@ -188,4 +170,3 @@ for (let y = 0; y < width; y++) {
 }
 
 cells.forEach((row) => row.forEach((cell) => cell.addEventListener("click", generateGrid)));
-cells.forEach((row) => row.forEach((cell) => cell.addEventListener("dblClick", onCellClick)));
