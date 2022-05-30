@@ -1,22 +1,7 @@
 const field = document.querySelector(".field");
 
 
-//generate grid
-const width = 20;
-const height = 20;
-const numOfMines = 50;
-const grid = [];
-const click ={x: 5, y: 8}
-const cellSize = 40;
 
-for (let y = 0; y < width; y++) {
-    grid.push([]);
-    for (let x = 0;  x < height; x++) {
-        grid[y].push(0);
-    }
-}
-
-grid.forEach((row) => console.log(row.join(" ")))
 
 const getCoordinates = (cell, cells) => {
     for (let y = 0; y < cells.length; y++) {
@@ -33,7 +18,7 @@ const getCoordinates = (cell, cells) => {
 
 const getSurrounding = (coords, height, width) => {
     const surroundingArr = [];
-    console.log(coords);
+    //console.log(coords);
 
     for (let i = -1; i <= 1; i++) {
         for (let j = -1; j <= 1; j++) {
@@ -49,47 +34,121 @@ const getSurrounding = (coords, height, width) => {
             }
         }
     }
-    console.log(surroundingArr);
+    //console.log(surroundingArr);
     return surroundingArr;
 };
 
-//generateMines
-for (let i = 0; i < numOfMines; i++){
-    let x = Math.floor(Math.random() * grid[0].length);
-    let y = Math.floor(Math.random() * grid.length);
-    
-    while (grid[y][x] === "x") { //not click or surrounding
-        x = Math.floor(Math.random() * grid[0].length);
-        y = Math.floor(Math.random() * grid.length);
-    }
-
-    grid[y][x] = "x"
-    console.log("added x"+x+" y"+y)
-
-    const surrounding = getSurrounding({x:x,y:y}, height, width);
-    surrounding.forEach((coords) => {
-        if (!isNaN(grid[coords.y][coords.x])) {
-            grid[coords.y][coords.x]++;
+const isIn = (coords, coordsList) => {
+    for (let i = 0; i < coordsList.length; i++) {
+        if (coordsList[i].x === coords.x && coordsList[i].y === coords.y) {
+            return true;
         }
-    })
-
-    //for each add 1
+    }
+    return false;
 }
 
+const width = 20;
+const height = 20;
+const numOfMines = 50;
+const grid = [];
+const cellSize = 40;
 
-//for each cell
-//make in html and add to field
-//get html element and store in new object called cells with number and coordinates inside
-//add to 
+const generateGrid = (event) => {
+    //generate grid
+
+    const click = getCoordinates(event.target, cells);
 
 
+    //generateMines
+    for (let i = 0; i < numOfMines; i++){
+        let x = Math.floor(Math.random() * grid[0].length);
+        let y = Math.floor(Math.random() * grid.length);
+        const clickAndSurrounding = getSurrounding(click, height, width);
+        clickAndSurrounding.push(click)
+
+        while (grid[y][x] === "x" || isIn({x:x, y:y}, clickAndSurrounding)) {
+            x = Math.floor(Math.random() * grid[0].length);
+            y = Math.floor(Math.random() * grid.length);
+        }
+
+        grid[y][x] = "x"
+        console.log("added x"+x+" y"+y)
+
+        const surrounding = getSurrounding({x:x,y:y}, height, width);
+        surrounding.forEach((coords) => {
+            if (!isNaN(grid[coords.y][coords.x])) {
+                grid[coords.y][coords.x]++;
+            }
+        })
+    }
+    grid.forEach((row) => console.log(row.join(" ")))
+
+    cells = []
+    field.innerHTML = "";
+
+    for (let y = 0; y < width; y++) {
+        cells.push([]);
+        for (let x = 0;  x < height; x++) {
+            //new html object
+            field.innerHTML += `
+                <div class="cell cell--unopened cell--${grid[y][x] === "x" ? "mine" : grid[y][x]}"">
+                    <div>${grid[y][x]}</div>
+                </div>
+            `;
+            cells[y].push(null);
+        }
+    }
+
+    let elements = document.querySelectorAll(".cell");
+    for (let y = 0; y < width; y++) {
+        for (let x = 0;  x < height; x++) {
+            cells[y][x] = elements[x + width * y];
+        }
+    }
+    console.log(document.querySelector(".cell").style.width)
+
+    field.style.gridTemplateColumns = `repeat(${width}, 1fr)`;
+    field.style.gridTemplateRows = `repeat(${height}, 1fr)`;
 
 
-grid.forEach((row) => console.log(row.join(" ")))
+    field.style.width = `${width * (cellSize + 5)}px`
+    field.style.height = `${height * (cellSize + 5)}px`;
 
+    cells.forEach((row) => row.forEach((cell) => cell.addEventListener("click", onCellClick)));
+    reveal(cells[click.y][click.x])
+}
 
+const onCellClick = (event) => {
+    reveal(event.target)
+}
 
-const cells = [];
+const reveal = (cell) => {
+    const cellClasses = cell.classList;
+    if (cellClasses.contains("cell--unopened")) {
+        cellClasses.remove("cell--unopened")
+        cellClasses.add("cell--opened")
+
+        if (cellClasses.contains("cell--mine")) {
+            onMine()
+        } else if (cellClasses.contains("cell--0")) {
+            const surroundingCoords = getSurrounding(getCoordinates(cell, cells), cells.length, cells[0].length)
+            surroundingCoords.forEach((coords) => reveal(cells[coords.y][coords.x]))
+        }
+    }
+}
+
+const onMine = () => {
+    console.log("mine!")
+    cells.forEach((row) => row.forEach((cell) => {
+        if (cell.classList.contains("cell--unopened")) {
+            cell.classList.remove("cell--unopened");
+            cell.classList.add("cell--unopened-end");
+        }
+    }));
+    console.log(cells)
+}
+
+let cells = [];
 
 for (let y = 0; y < width; y++) {
     cells.push([]);
@@ -97,8 +156,8 @@ for (let y = 0; y < width; y++) {
 
         //new html object
         field.innerHTML += `
-            <div class="cell cell--unopened cell--${grid[y][x] === "x" ? "mine" : grid[y][x]}"">
-                <div>${grid[y][x]}</div>
+            <div class="cell cell--unopened">
+                <div></div>
             </div>
         `;
         cells[y].push(null);
@@ -121,43 +180,12 @@ field.style.width = `${width * (cellSize + 5)}px`
 field.style.height = `${height * (cellSize + 5)}px`;
 
 
-
-const onCellClick = (event) => {
-    reveal(event.target)
-}
-
-const reveal = (cell) => {
-    const cellClasses = cell.classList;
-    if (cellClasses.contains("cell--unopened")) {
-        cellClasses.remove("cell--unopened")
-        cellClasses.add("cell--opened")
-
-        if (cellClasses.contains("cell--mine")) {
-            onMine()
-        } else if (cellClasses.contains("cell--0")) {
-            const surroundingCoords = getSurrounding(getCoordinates(cell, cells), cells.length, cells[0].length)
-            surroundingCoords.forEach((coords) => reveal(cells[coords.y][coords.x]))
-        }
+for (let y = 0; y < width; y++) {
+    grid.push([]);
+    for (let x = 0;  x < height; x++) {
+        grid[y].push(0);
     }
 }
 
-
-
-
-
-const onMine = () => {
-    console.log("mine!")
-    cells.forEach((row) => row.forEach((cell) => {
-        if (cell.classList.contains("cell--unopened")) {
-            cell.classList.remove("cell--unopened");
-            cell.classList.add("cell--unopened-end");
-        }
-    }));
-    console.log(cells)
-}
-
-
-
-
-cells.forEach((row) => row.forEach((cell) => cell.addEventListener("click", onCellClick)));
-//cell.addEventListener("click", onCellClick)
+cells.forEach((row) => row.forEach((cell) => cell.addEventListener("click", generateGrid)));
+cells.forEach((row) => row.forEach((cell) => cell.addEventListener("dblClick", onCellClick)));
