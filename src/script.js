@@ -1,3 +1,6 @@
+import confetti from "canvas-confetti";
+import "./styles.scss";
+
 const field = document.querySelector(".field");
 const generateButton = document.querySelector("#generate-button");
 const heightInput = document.querySelector("#height");
@@ -9,6 +12,15 @@ const cellSize = 40;
 let height = 0;
 let width = 0;
 let cells = [];
+
+const config = {
+    duration: 500, // animation duration
+    color: '#FF0000', // background color of shatter. default: background color of target element
+    distance: 2, // shatter travel distance - multiplier of slice size. default: 2
+    sliceCount: 10, // slice count in one axis. default: 10
+    maxSliceSize: 15, // default: 15
+    shatterClass: 'asdf' // default: none
+};
 
 
 const getCoordinates = (cell, cells) => {
@@ -122,6 +134,7 @@ const onMine = () => {
             cell.classList.add("cell--unopened-end");
         }
     }));
+
     console.log(cells)
 }
 
