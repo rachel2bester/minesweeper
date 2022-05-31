@@ -127,7 +127,7 @@ const onMine = () => {
 
 const generateGrid = (event) => {
     generateButton.removeEventListener("click", generateGrid)
-    
+    console.log("generating grid")
     height = heightInput.value;
     width = widthInput.value;
     numOfMines = minesInput.value;
@@ -145,6 +145,7 @@ const generateGrid = (event) => {
                 </div>
             `;
             cells[y].push(null);
+            console.log("new cell")
         }
     }
     
