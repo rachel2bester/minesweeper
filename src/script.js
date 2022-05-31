@@ -13,6 +13,9 @@ let height = 0;
 let width = 0;
 let cells = [];
 
+
+
+
 const config = {
     duration: 500, // animation duration
     color: '#FF0000', // background color of shatter. default: background color of target element
@@ -21,7 +24,6 @@ const config = {
     maxSliceSize: 15, // default: 15
     shatterClass: 'asdf' // default: none
 };
-
 
 const getCoordinates = (cell, cells) => {
     for (let y = 0; y < cells.length; y++) {
@@ -68,6 +70,7 @@ const isIn = (coords, coordsList) => {
 }
 
 const generateMines = (event) => {
+    
     const click = getCoordinates(event.target, cells);
 
     //generateMines
@@ -128,12 +131,32 @@ const reveal = (cell) => {
 
 const onMine = () => {
     console.log("mine!")
+    
     cells.forEach((row) => row.forEach((cell) => {
         if (cell.classList.contains("cell--unopened")) {
             cell.classList.remove("cell--unopened");
             cell.classList.add("cell--unopened-end");
         }
+        if (cell.classList.contains("cell--mine")) {
+            const cellBoundsCell = cell.getBoundingClientRect();
+            console.log(cellBoundsCell);
+            confetti({
+                particleCount: 300,
+                spread: 360,
+                origin: {
+                    x: (cellBoundsCell.x + width)/screen.availWidth,
+                    y: (cellBoundsCell.y + height)/screen.availHeight
+                },
+                colors: ["#FF0000", "#FF6600", "#FFFF00", "#FF4400", "#FF0000"],
+                decay: 0.999,
+                startVelocity: 0.2,
+                gravity: 0,
+                scalar: 2,
+                ticks: 900
+            }) 
+        }
     }));
+    
 
     console.log(cells)
 }
