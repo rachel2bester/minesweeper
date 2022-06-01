@@ -17,12 +17,9 @@ let width = 0;
 let cells = [];
 
 
-
-
-
 const getCoordinates = (cell, cells) => {
     for (let y = 0; y < cells.length; y++) {
-        for (let x = 0; x < cells.length; x++) {
+        for (let x = 0; x < cells[0].length; x++) {
             if(cells[y][x] === cell) {
                 return {
                     x: x,
@@ -35,8 +32,6 @@ const getCoordinates = (cell, cells) => {
 
 const getSurrounding = (coords, height, width) => {
     const surroundingArr = [];
-    //console.log(coords);
-
     for (let i = -1; i <= 1; i++) {
         for (let j = -1; j <= 1; j++) {
             if (!(i === 0 && j === 0) &&
@@ -45,15 +40,14 @@ const getSurrounding = (coords, height, width) => {
                 const cellCoords = {
                     x: (coords.x + j),
                     y: (coords.y + i)
-                }
-                
+                }         
                 surroundingArr.push(cellCoords);
             }
         }
     }
     //console.log(surroundingArr);
     return surroundingArr;
-};
+}
 
 const isIn = (coords, coordsList) => {
     for (let i = 0; i < coordsList.length; i++) {
@@ -106,7 +100,18 @@ const generateMines = (event) => {
 }
 
 const onCellClick = (event) => {
-    reveal(event.target)
+    const isFlag = document.getElementById("flag")
+    if (isFlag.checked) {
+        if (event.target.classList.contains("cell--flag")) {
+            event.target.classList.remove("cell--flag");
+        } else {
+            event.target.classList.add("cell--flag");
+        }
+    } else {
+        if (!event.target.classList.contains("cell--flag")) {
+            reveal(event.target);
+        }
+    }
 }
 
 const reveal = (cell) => {
@@ -118,10 +123,58 @@ const reveal = (cell) => {
         if (cellClasses.contains("cell--mine")) {
             onMine()
         } else if (cellClasses.contains("cell--0")) {
+            console.log()
             const surroundingCoords = getSurrounding(getCoordinates(cell, cells), cells.length, cells[0].length)
             surroundingCoords.forEach((coords) => reveal(cells[coords.y][coords.x]))
         }
     }
+    checkWin(cells);
+}
+
+const checkWin = (cells) => {
+    for (let y = 0; y < cells.length; y++) {
+        for (let x = 0; x < cells[0].length; x++) {
+            if (cells[y][x].classList.contains("cell--unopened") && !cells[y][x].classList.contains("cell--mine")) {
+                return false;
+            }
+        }
+    }
+    confetti({
+        particleCount: 200,
+        spread: 90,
+        angle: -40,
+        origin: {x: -0.1, y: -0.1},
+        gravity: 0.5
+    })
+    confetti({
+        particleCount: 200,
+        spread: 90,
+        angle: 220,
+        origin: {x: 1.1, y: -0.1},
+        gravity: 0.5
+    })
+    confetti({
+        particleCount: 200,
+        spread: 90,
+        angle: -90,
+        origin: {x: 0.5, y: -0.2},
+        gravity: 0.5
+    })
+    confetti({
+        particleCount: 200,
+        spread: 90,
+        angle: 135,
+        origin: {x: 1, y: 1},
+        gravity: 0.5
+    })
+    confetti({
+        particleCount: 200,
+        spread: 90,
+        angle: 45,
+        origin: {x: 0, y: 1},
+        gravity: 0.5
+    })
+    return true;
 }
 
 const onMine = () => {
@@ -164,11 +217,16 @@ const onMine = () => {
     console.log(cells)
 }
 
-const explosion = async (cell) => {
-    cell.style.visibility = "visible";
-}
-
 const generateGrid = (event) => {
+    
+
+
+
+
+
+
+
+
     generateButton.removeEventListener("click", generateGrid);
     const form = document.querySelector(".form");
     form.style.display = "none";
@@ -219,7 +277,6 @@ const generateGrid = (event) => {
     
 }
 
-// generateGrid()
 
 window.addEventListener('load', () => console.log("hi"))
 generateButton.addEventListener("click", generateGrid)

@@ -3,4 +3,13 @@
 
 h1 {
     font-family: $primary-font;
-}  
+    color: rgb(167, 0, 167)
+} 
+
+body {
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
