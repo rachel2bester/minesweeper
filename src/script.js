@@ -1,6 +1,8 @@
 import confetti from "canvas-confetti";
 import "./styles.scss";
 
+import {explode} from '@ddlab/bomb';
+
 const field = document.querySelector(".field");
 const generateButton = document.querySelector("#generate-button");
 const heightInput = document.querySelector("#height");
@@ -16,14 +18,6 @@ let cells = [];
 
 
 
-const config = {
-    duration: 500, // animation duration
-    color: '#FF0000', // background color of shatter. default: background color of target element
-    distance: 2, // shatter travel distance - multiplier of slice size. default: 2
-    sliceCount: 10, // slice count in one axis. default: 10
-    maxSliceSize: 15, // default: 15
-    shatterClass: 'asdf' // default: none
-};
 
 const getCoordinates = (cell, cells) => {
     for (let y = 0; y < cells.length; y++) {
@@ -132,33 +126,45 @@ const reveal = (cell) => {
 const onMine = () => {
     console.log("mine!")
     
+    
     cells.forEach((row) => row.forEach((cell) => {
+        console.log("here!")
         if (cell.classList.contains("cell--unopened")) {
             cell.classList.remove("cell--unopened");
             cell.classList.add("cell--unopened-end");
         }
         if (cell.classList.contains("cell--mine")) {
-            const cellBoundsCell = cell.getBoundingClientRect();
-            console.log(cellBoundsCell);
-            confetti({
-                particleCount: 300,
-                spread: 360,
-                origin: {
-                    x: (cellBoundsCell.x + width)/screen.availWidth,
-                    y: (cellBoundsCell.y + height)/screen.availHeight
-                },
-                colors: ["#FF0000", "#FF6600", "#FFFF00", "#FF4400", "#FF0000"],
-                decay: 0.999,
-                startVelocity: 0.2,
-                gravity: 0,
-                scalar: 2,
-                ticks: 900
-            }) 
+
+            explode(cell, {
+                duration: 10000, // animation duration
+                shouldRemoveEl: false, // toggle for element removal from DOM after explosion. default: false
+                distance: 6, // shatter travel distance - multiplier of slice size. default: 2
+                color: "#FF8000",
+                sliceCount: 5, // slice count in one axis. default: 10
+                maxSliceSize: 10, // default: 15
+                shatterClass: 'asdf' // default: none
+            })
+
+            explode(cell, {
+                duration: 10000, // animation duration
+                shouldRemoveEl: false, // toggle for element removal from DOM after explosion. default: false
+                distance: 5, // shatter travel distance - multiplier of slice size. default: 2
+                color: "#FF0000",
+                sliceCount: 5, // slice count in one axis. default: 10
+                maxSliceSize: 10, // default: 15
+                shatterClass: 'asdf' // default: none
+            })
+            
+            console.log("explode");
         }
     }));
     
 
     console.log(cells)
+}
+
+const explosion = async (cell) => {
+    cell.style.visibility = "visible";
 }
 
 const generateGrid = (event) => {
@@ -177,7 +183,6 @@ const generateGrid = (event) => {
             //new html object
             field.innerHTML += `
                 <div class="cell cell--unopened">
-                    <div></div>
                 </div>
             `;
             cells[y].push(null);

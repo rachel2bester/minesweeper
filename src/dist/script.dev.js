@@ -4,6 +4,8 @@ var _canvasConfetti = _interopRequireDefault(require("canvas-confetti"));
 
 require("./styles.scss");
 
+var _bomb = require("@ddlab/bomb");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 var field = document.querySelector(".field");
@@ -17,20 +19,6 @@ var cellSize = 40;
 var height = 0;
 var width = 0;
 var cells = [];
-var config = {
-  duration: 500,
-  // animation duration
-  color: '#FF0000',
-  // background color of shatter. default: background color of target element
-  distance: 2,
-  // shatter travel distance - multiplier of slice size. default: 2
-  sliceCount: 10,
-  // slice count in one axis. default: 10
-  maxSliceSize: 15,
-  // default: 15
-  shatterClass: 'asdf' // default: none
-
-};
 
 var getCoordinates = function getCoordinates(cell, cells) {
   for (var y = 0; y < cells.length; y++) {
@@ -159,32 +147,64 @@ var onMine = function onMine() {
   console.log("mine!");
   cells.forEach(function (row) {
     return row.forEach(function (cell) {
+      console.log("here!");
+
       if (cell.classList.contains("cell--unopened")) {
         cell.classList.remove("cell--unopened");
         cell.classList.add("cell--unopened-end");
       }
 
       if (cell.classList.contains("cell--mine")) {
-        var cellBoundsCell = cell.getBoundingClientRect();
-        console.log(cellBoundsCell);
-        (0, _canvasConfetti["default"])({
-          particleCount: 300,
-          spread: 360,
-          origin: {
-            x: (cellBoundsCell.x + width) / screen.availWidth,
-            y: (cellBoundsCell.y + height) / screen.availHeight
-          },
-          colors: ["#FF0000", "#FF6600", "#FFFF00", "#FF4400", "#FF0000"],
-          decay: 0.999,
-          startVelocity: 0.2,
-          gravity: 0,
-          scalar: 2,
-          ticks: 900
+        (0, _bomb.explode)(cell, {
+          duration: 10000,
+          // animation duration
+          shouldRemoveEl: false,
+          // toggle for element removal from DOM after explosion. default: false
+          distance: 6,
+          // shatter travel distance - multiplier of slice size. default: 2
+          color: "#FF8000",
+          sliceCount: 5,
+          // slice count in one axis. default: 10
+          maxSliceSize: 10,
+          // default: 15
+          shatterClass: 'asdf' // default: none
+
         });
+        (0, _bomb.explode)(cell, {
+          duration: 10000,
+          // animation duration
+          shouldRemoveEl: false,
+          // toggle for element removal from DOM after explosion. default: false
+          distance: 5,
+          // shatter travel distance - multiplier of slice size. default: 2
+          color: "#FF0000",
+          sliceCount: 5,
+          // slice count in one axis. default: 10
+          maxSliceSize: 10,
+          // default: 15
+          shatterClass: 'asdf' // default: none
+
+        });
+        console.log("explode");
       }
     });
   });
   console.log(cells);
+};
+
+var explosion = function explosion(cell) {
+  return regeneratorRuntime.async(function explosion$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+          cell.style.visibility = "visible";
+
+        case 1:
+        case "end":
+          return _context.stop();
+      }
+    }
+  });
 };
 
 var generateGrid = function generateGrid(event) {
@@ -200,7 +220,7 @@ var generateGrid = function generateGrid(event) {
 
     for (var x = 0; x < height; x++) {
       //new html object
-      field.innerHTML += "\n                <div class=\"cell cell--unopened\">\n                    <div></div>\n                </div>\n            ";
+      field.innerHTML += "\n                <div class=\"cell cell--unopened\">\n                </div>\n            ";
       cells[y].push(null);
       console.log("new cell");
     }
