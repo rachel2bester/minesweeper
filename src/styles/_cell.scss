@@ -10,14 +10,17 @@
 
     font-size: 0.8 * $cell-size;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     &--opened{
         background-color: grey;
     }
 
     &--unopened {
-        background-color: black;
-        div {
+        background-color: rgb(80, 80, 80);
+        p {
             display: none;
         }
     }
@@ -27,40 +30,46 @@
     }
     
     &--unopened-end {
-        background-color: white;
+        background-color: rgb(80, 80, 80);
+    }
+
+    &--0 {
+        p {
+            visibility: hidden;
+        }
     }
     
 
-    // &--1 {
-    //     color: blue;
-    // }
+    &--1 {
+        color: blue;
+    }
 
-    // &--2 {
-    //     color: green;
-    // }
+    &--2 {
+        color: green;
+    }
 
-    // &--3 {
-    //     color: red;
-    // }
+    &--3 {
+        color: red;
+    }
 
-    // &--4 {
-    //     color:navy;
-    // }
+    &--4 {
+        color:navy;
+    }
 
-    // &--5 {
-    //     color: maroon;
-    // }
+    &--5 {
+        color: maroon;
+    }
 
-    // &--6 {
-    //     color: #2b8285;
-    // }
+    &--6 {
+        color: #2b8285;
+    }
 
-    // &--7 {
-    //     color: black;
-    // }
+    &--7 {
+        color: black;
+    }
 
-    // &--8 {
-    //     color: rgb(83, 83, 83);
-    // }
+    &--8 {
+        color: rgb(83, 83, 83);
+    }
 }
 

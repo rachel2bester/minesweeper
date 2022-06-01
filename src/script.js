@@ -92,7 +92,7 @@ const generateMines = (event) => {
 
     for (let y = 0; y < width; y++) {
         for (let x = 0;  x < height; x++) {
-            cells[y][x].innerText = grid[y][x];
+            cells[y][x].innerHTML = `<p>${grid[y][x]}</p>`
             cells[y][x].classList.add(`cell--${grid[y][x] === "x" ? "mine" : grid[y][x]}`)
         }
     }

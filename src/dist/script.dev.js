@@ -101,7 +101,7 @@ var generateMines = function generateMines(event) {
 
   for (var _y = 0; _y < width; _y++) {
     for (var _x = 0; _x < height; _x++) {
-      cells[_y][_x].innerText = grid[_y][_x];
+      cells[_y][_x].innerHTML = "<p>".concat(grid[_y][_x], "</p>");
 
       cells[_y][_x].classList.add("cell--".concat(grid[_y][_x] === "x" ? "mine" : grid[_y][_x]));
     }
