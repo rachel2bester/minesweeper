@@ -15,7 +15,7 @@ var widthInput = document.querySelector("#width");
 var minesInput = document.querySelector("#mines");
 var numOfMines = 0;
 var grid = [];
-var cellSize = 40;
+var cellSize = 30;
 var height = 0;
 var width = 0;
 var cells = [];
@@ -99,8 +99,8 @@ var generateMines = function generateMines(event) {
     return console.log(row.join(" "));
   });
 
-  for (var _y = 0; _y < width; _y++) {
-    for (var _x = 0; _x < height; _x++) {
+  for (var _y = 0; _y < height; _y++) {
+    for (var _x = 0; _x < width; _x++) {
       cells[_y][_x].innerHTML = "<p>".concat(grid[_y][_x], "</p>");
 
       cells[_y][_x].classList.add("cell--".concat(grid[_y][_x] === "x" ? "mine" : grid[_y][_x]));
@@ -209,16 +209,18 @@ var explosion = function explosion(cell) {
 
 var generateGrid = function generateGrid(event) {
   generateButton.removeEventListener("click", generateGrid);
+  var form = document.querySelector(".form");
+  form.style.display = "none";
   console.log("generating grid");
   height = heightInput.value;
   width = widthInput.value;
   numOfMines = minesInput.value;
   field.style.visibility = "visible";
 
-  for (var y = 0; y < width; y++) {
+  for (var y = 0; y < height; y++) {
     cells.push([]);
 
-    for (var x = 0; x < height; x++) {
+    for (var x = 0; x < width; x++) {
       //new html object
       field.innerHTML += "\n                <div class=\"cell cell--unopened\">\n                </div>\n            ";
       cells[y].push(null);
@@ -228,8 +230,8 @@ var generateGrid = function generateGrid(event) {
 
   var elements = document.querySelectorAll(".cell");
 
-  for (var _y2 = 0; _y2 < width; _y2++) {
-    for (var _x2 = 0; _x2 < height; _x2++) {
+  for (var _y2 = 0; _y2 < height; _y2++) {
+    for (var _x2 = 0; _x2 < width; _x2++) {
       cells[_y2][_x2] = elements[_x2 + width * _y2];
     }
   }
@@ -239,10 +241,10 @@ var generateGrid = function generateGrid(event) {
   field.style.width = "".concat(width * (cellSize + 5), "px");
   field.style.height = "".concat(height * (cellSize + 5), "px");
 
-  for (var _y3 = 0; _y3 < width; _y3++) {
+  for (var _y3 = 0; _y3 < height; _y3++) {
     grid.push([]);
 
-    for (var _x3 = 0; _x3 < height; _x3++) {
+    for (var _x3 = 0; _x3 < width; _x3++) {
       grid[_y3].push(0);
     }
   }

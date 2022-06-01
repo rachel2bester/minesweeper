@@ -1,2 +1,8 @@
+@font-face {
+    font-family: "mine-sweeper";
+    src: url('./data/mine-sweeper/mine-sweeper.ttf');
+}
 
-$cell-size: 40px;
+
+$cell-size: 30px;
+$primary-font: "mine-sweeper";

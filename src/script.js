@@ -8,9 +8,10 @@ const generateButton = document.querySelector("#generate-button");
 const heightInput = document.querySelector("#height");
 const widthInput = document.querySelector("#width");
 const minesInput = document.querySelector("#mines");
+
 let numOfMines = 0;
 const grid = [];
-const cellSize = 40;
+const cellSize = 30;
 let height = 0;
 let width = 0;
 let cells = [];
@@ -90,8 +91,8 @@ const generateMines = (event) => {
     }
     grid.forEach((row) => console.log(row.join(" ")))
 
-    for (let y = 0; y < width; y++) {
-        for (let x = 0;  x < height; x++) {
+    for (let y = 0; y < height; y++) {
+        for (let x = 0;  x < width; x++) {
             cells[y][x].innerHTML = `<p>${grid[y][x]}</p>`
             cells[y][x].classList.add(`cell--${grid[y][x] === "x" ? "mine" : grid[y][x]}`)
         }
@@ -168,7 +169,9 @@ const explosion = async (cell) => {
 }
 
 const generateGrid = (event) => {
-    generateButton.removeEventListener("click", generateGrid)
+    generateButton.removeEventListener("click", generateGrid);
+    const form = document.querySelector(".form");
+    form.style.display = "none";
     console.log("generating grid")
     height = heightInput.value;
     width = widthInput.value;
@@ -176,9 +179,9 @@ const generateGrid = (event) => {
 
     field.style.visibility = "visible";
 
-    for (let y = 0; y < width; y++) {
+    for (let y = 0; y < height; y++) {
         cells.push([]);
-        for (let x = 0;  x < height; x++) {
+        for (let x = 0;  x < width; x++) {
     
             //new html object
             field.innerHTML += `
@@ -191,8 +194,8 @@ const generateGrid = (event) => {
     }
     
     const elements = document.querySelectorAll(".cell");
-    for (let y = 0; y < width; y++) {
-        for (let x = 0;  x < height; x++) {
+    for (let y = 0; y < height; y++) {
+        for (let x = 0;  x < width; x++) {
             cells[y][x] = elements[x + width * y];
         }
     }
@@ -205,9 +208,9 @@ const generateGrid = (event) => {
     field.style.height = `${height * (cellSize + 5)}px`;
     
     
-    for (let y = 0; y < width; y++) {
+    for (let y = 0; y < height; y++) {
         grid.push([]);
-        for (let x = 0;  x < height; x++) {
+        for (let x = 0;  x < width; x++) {
             grid[y].push(0);
         }
     }

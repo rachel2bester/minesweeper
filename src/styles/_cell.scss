@@ -8,14 +8,16 @@
     align-self: center;
     justify-self: center;
 
-    font-size: 0.8 * $cell-size;
+    font-size: 0.5 * $cell-size;
     text-align: center;
+    font-weight: lighter;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-family: $primary-font;
 
     &--opened{
-        background-color: grey;
+        background-color: rgb(172, 172, 172);
     }
 
     &--unopened {
