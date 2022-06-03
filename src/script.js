@@ -4,8 +4,8 @@ import "./styles.scss";
 import {explode} from '@ddlab/bomb';
 
 const field = document.querySelector(".field");
-const sizeOptions = querySelectorAll(".size-option")
-const difficultyOptions = querySelectorAll(".difficulty-option")
+const sizeOptions = document.querySelectorAll(".size-option")
+const difficultyOptions = document.querySelectorAll(".difficulty-option")
 const generateButton = document.querySelector("#generate-button");
 
 let numOfMines = 0;
@@ -219,7 +219,6 @@ const onMine = () => {
 }
 
 const generateGrid = (event) => {
-
     generateButton.removeEventListener("click", generateGrid);
     const form = document.querySelector(".settings");
     const heightInput = document.querySelector("#height");
@@ -227,11 +226,50 @@ const generateGrid = (event) => {
     form.style.display = "none";
     document.querySelector(".flag").style.display = "flex";
     console.log("generating grid")
-    height = heightInput.value;
-    width = widthInput.value;
     
-
+    
     field.style.visibility = "visible";
+
+    let sizeSetting = "";
+    for (let i = 0; i < sizeOptions.length; i++) {
+        if (sizeOptions[i].classList.contains("settings__option__selected")) {
+            sizeSetting = sizeOptions[i].innerText;
+            break;
+        }
+    }
+
+    switch(sizeSetting) {
+        case "Small":
+            height = 10;
+            width = 10;
+            break;
+        case "Medium":
+            height = 15;
+            width = 15;
+            break;
+        case "Large":
+            height = 25;
+            width = 25;
+            break;
+        case "Fit to Screen":
+            height = Math.floor((screen.height-90)/(cellSize + 10));
+            width = Math.floor(screen.width/(cellSize + 10));
+            console.log(height + "   " + width)
+            if (height * width > 900) {
+                const ratio = 900/ height * width;
+                height = ratio * height;
+                width = ratio * width;
+            }
+            console.log(height + "   " + width)
+            console.log(screen.height + "   " + screen.width)
+            break;
+        default:
+            height = heightInput.value;
+            width = widthInput.value;
+    }
+
+    console.log(sizeSetting);
+
 
     for (let y = 0; y < height; y++) {
         cells.push([]);
@@ -273,6 +311,17 @@ const generateGrid = (event) => {
     
 }
 
+const onSizeOptionChange = (event) => {
+    sizeOptions.forEach((option) => option.classList.remove("settings__option__selected"))
+    event.currentTarget.classList.add("settings__option__selected");
+}
+
+const onDifficultyOptionChange = (event) => {
+    difficultyOptions.forEach((option) => option.classList.remove("settings__option__selected"))
+    event.currentTarget.classList.add("settings__option__selected");
+}
 
 
-generateButton.addEventListener("click", generateGrid)
+generateButton.addEventListener("click", generateGrid);
+sizeOptions.forEach((option) => option.addEventListener("click", onSizeOptionChange))
+difficultyOptions.forEach((option) => option.addEventListener("click", onDifficultyOptionChange))
