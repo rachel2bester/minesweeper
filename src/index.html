@@ -15,10 +15,10 @@
             <div class="settings__size__small settings__option ">Small</div>
             <div class="settings__size__medium settings__option">Medium</div>
             <div class="settings__size__large settings__option">Large</div>
-            <div class="settings__size__fit-to-screen settings__option settings__option__selected" >Fit to Screen</div>
-            <div class="settings__size__custom settings__option ">
-                <h4>Custom</h4>
-                <div class="settings__size__custom__form">
+            <div class="settings__size__fit-to-screen settings__option " >Fit to Screen</div>
+            <div class="settings__size__custom settings__option settings__option__selected">
+                <div>Custom</div>
+                <div class="settings__custom-settings">
                     <div>
                         <label for="height">Height</label> 
                         <input id="height" type="number" min="5" max="50" step = "1" value="10">
@@ -32,19 +32,26 @@
         </div>
         <h3 class="settings__heading">Difficulty</h3>
         <div class="settings__difficulty">
-            <div class="settings__difficulty__easy settings__option settings__option__selected">Easy</div>
+            <div class="settings__difficulty__easy settings__option ">Easy</div>
             <div class="settings__difficulty__medium settings__option">Medium</div>
             <div class="settings__difficulty__hard settings__option">Hard</div>
-            <div class="settings__difficulty__custom settings__option">
+            <div class="settings__difficulty__custom settings__option settings__option__selected">
                 <div>Custom</div>
-                <label for="mines">Mines</label> 
-                <input id="mines" type="number" min="5" max="50" step = "1" value="10">
+                <div class="settings__custom-settings">
+                    <div>
+                        <label for="mines">Mines</label> 
+                        <input id="mines" type="number" min="5" max="50" step = "1" value="10">
+                    </div>
+                </div>
             </div>
         </div>
-        <button type="button" id="generate-button">Generate</button>
+        <button class="settings__start" type="button" id="generate-button">Start</button>
     </div>
-    <label for="flag">Flag</label>
-    <input type="checkbox" id="flag">
+
+    <div class="flag">
+        <label for="flag">Flag</label>
+        <input type="checkbox" id="flag">
+    </div>
 
 
     <div class="field"></div>
