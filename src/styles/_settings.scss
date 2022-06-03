@@ -1,0 +1,62 @@
+@use "./variables" as *;
+@use "./mixin" as *;
+
+.settings {
+    color:white;
+    display:flex;
+    flex-direction: column;
+
+    &__heading {
+        font-size: 20px;
+        font-family: $primary-font;
+    }
+    
+
+    &__option {
+        border: white 2px solid;
+        margin: 5px;
+        width: 120px;
+        height: 80px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+
+        * {
+            display: none;
+            margin: 0px;
+        }
+
+        &:hover {
+            border: blue 2px solid;
+        }
+
+        &__selected {
+            border: red 2px solid;
+
+            * {
+                display: block;
+            }
+        }
+    }
+
+    &__size {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+
+        &__custom {
+            &__form {
+                display: flex;
+                justify-content: space-around;
+                width:100%;
+
+                * {
+                    font-size: 12px;
+                    width: 30px;
+                }
+            }
+        }
+    }
+}
