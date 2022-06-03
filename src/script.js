@@ -4,9 +4,10 @@ import "./styles.scss";
 import {explode} from '@ddlab/bomb';
 
 const field = document.querySelector(".field");
-const sizeOptions = document.querySelectorAll(".size-option")
-const difficultyOptions = document.querySelectorAll(".difficulty-option")
+const sizeOptions = document.querySelectorAll(".size-option");
+const difficultyOptions = document.querySelectorAll(".difficulty-option");
 const generateButton = document.querySelector("#generate-button");
+const flag = document.querySelector("#flag");
 
 let numOfMines = 0;
 const grid = [];
@@ -100,8 +101,7 @@ const generateMines = (event) => {
 }
 
 const onCellClick = (event) => {
-    const isFlag = document.getElementById("flag")
-    if (isFlag.checked) {
+    if (flag.classList.contains("flag__checkbox--selected")) {
         if (event.target.classList.contains("cell--flag")) {
             event.target.classList.remove("cell--flag");
         } else {
@@ -122,13 +122,18 @@ const reveal = (cell) => {
 
         if (cellClasses.contains("cell--mine")) {
             onMine()
-        } else if (cellClasses.contains("cell--0")) {
-            console.log()
-            const surroundingCoords = getSurrounding(getCoordinates(cell, cells), cells.length, cells[0].length)
-            surroundingCoords.forEach((coords) => reveal(cells[coords.y][coords.x]))
+        } else {
+            if (cellClasses.contains("cell--0")) {
+                console.log()
+                const surroundingCoords = getSurrounding(getCoordinates(cell, cells), cells.length, cells[0].length)
+                surroundingCoords.forEach((coords) => reveal(cells[coords.y][coords.x]))
+            }
+            if (checkWin(cells)) {
+                onWin(cells);
+            }
         }
     }
-    checkWin(cells);
+    
 }
 
 const checkWin = (cells) => {
@@ -139,6 +144,49 @@ const checkWin = (cells) => {
             }
         }
     }
+    return true;
+}
+
+const onMine = () => {
+    console.log("mine!")
+    
+    cells.forEach((row) => row.forEach((cell) => {
+        if (cell.classList.contains("cell--unopened")) {
+            cell.classList.remove("cell--unopened");
+            cell.classList.add("cell--unopened-end");
+        }
+        if (cell.classList.contains("cell--mine")) {
+
+            explode(cell, {
+                duration: 10000, // animation duration
+                shouldRemoveEl: false, // toggle for element removal from DOM after explosion. default: false
+                distance: 6, // shatter travel distance - multiplier of slice size. default: 2
+                color: "#FF8000",
+                sliceCount: 5, // slice count in one axis. default: 10
+                maxSliceSize: 10, // default: 15
+                shatterClass: 'asdf' // default: none
+            })
+
+            explode(cell, {
+                duration: 10000, // animation duration
+                shouldRemoveEl: false, // toggle for element removal from DOM after explosion. default: false
+                distance: 5, // shatter travel distance - multiplier of slice size. default: 2
+                color: "#FF0000",
+                sliceCount: 5, // slice count in one axis. default: 10
+                maxSliceSize: 10, // default: 15
+                shatterClass: 'asdf' // default: none
+            })
+        }
+    }));
+}
+
+const onWin = (cells) => {
+    cells.forEach((row) => row.forEach((cell) =>{ 
+        if (cell.classList.contains("cell--mine")) {
+            cell.classList.add("cell--mine--end")
+        }
+    }))
+
     confetti({
         particleCount: 200,
         spread: 90,
@@ -174,69 +222,72 @@ const checkWin = (cells) => {
         origin: {x: 0, y: 1},
         gravity: 0.5
     })
-    return true;
-}
-
-const onMine = () => {
-    console.log("mine!")
-    
-    
-    
-    cells.forEach((row) => row.forEach((cell) => {
-        console.log("here!")
-        if (cell.classList.contains("cell--unopened")) {
-            cell.classList.remove("cell--unopened");
-            cell.classList.add("cell--unopened-end");
-        }
-        if (cell.classList.contains("cell--mine")) {
-
-            explode(cell, {
-                duration: 10000, // animation duration
-                shouldRemoveEl: false, // toggle for element removal from DOM after explosion. default: false
-                distance: 6, // shatter travel distance - multiplier of slice size. default: 2
-                color: "#FF8000",
-                sliceCount: 5, // slice count in one axis. default: 10
-                maxSliceSize: 10, // default: 15
-                shatterClass: 'asdf' // default: none
-            })
-
-            explode(cell, {
-                duration: 10000, // animation duration
-                shouldRemoveEl: false, // toggle for element removal from DOM after explosion. default: false
-                distance: 5, // shatter travel distance - multiplier of slice size. default: 2
-                color: "#FF0000",
-                sliceCount: 5, // slice count in one axis. default: 10
-                maxSliceSize: 10, // default: 15
-                shatterClass: 'asdf' // default: none
-            })
-            
-            console.log("explode");
-        }
-    }));
-    
-
-    console.log(cells)
 }
 
 const generateGrid = (event) => {
     generateButton.removeEventListener("click", generateGrid);
     const form = document.querySelector(".settings");
-    const heightInput = document.querySelector("#height");
-    const widthInput = document.querySelector("#width");
     form.style.display = "none";
     document.querySelector(".flag").style.display = "flex";
     console.log("generating grid")
-    
-    
     field.style.visibility = "visible";
 
+    const size = getSizeSettings();
+    height = size.height;
+    width = size.width;
+
+    for (let y = 0; y < height; y++) {
+        cells.push([]);
+        for (let x = 0;  x < width; x++) {
+    
+            //new html object
+            field.innerHTML += `
+                <div class="cell cell--unopened">
+                </div>
+            `;
+            cells[y].push(null);
+            console.log("new cell")
+        }
+    }
+
+    field.style.gridTemplateColumns = `repeat(${width}, 1fr)`;
+    field.style.gridTemplateRows = `repeat(${height}, 1fr)`;
+    
+    field.style.width = `${width * (cellSize + 5)}px`
+    field.style.height = `${height * (cellSize + 5)}px`;
+    
+
+    const elements = document.querySelectorAll(".cell");
+    for (let y = 0; y < height; y++) {
+        for (let x = 0;  x < width; x++) {
+            cells[y][x] = elements[x + width * y];
+        }
+    }
+    
+    for (let y = 0; y < height; y++) {
+        grid.push([]);
+        for (let x = 0;  x < width; x++) {
+            grid[y].push(0);
+        }
+    }
+
+    cells.forEach((row) => row.forEach((cell) => cell.addEventListener("click", generateMines)));
+    
+}
+
+
+const getSizeSettings = () => {
     let sizeSetting = "";
+
     for (let i = 0; i < sizeOptions.length; i++) {
         if (sizeOptions[i].classList.contains("settings__option__selected")) {
             sizeSetting = sizeOptions[i].innerText;
             break;
         }
     }
+
+    let height = 0;
+    let width = 0;
 
     switch(sizeSetting) {
         case "Small":
@@ -268,47 +319,10 @@ const generateGrid = (event) => {
             width = widthInput.value;
     }
 
-    console.log(sizeSetting);
-
-
-    for (let y = 0; y < height; y++) {
-        cells.push([]);
-        for (let x = 0;  x < width; x++) {
-    
-            //new html object
-            field.innerHTML += `
-                <div class="cell cell--unopened">
-                </div>
-            `;
-            cells[y].push(null);
-            console.log("new cell")
-        }
+    return {
+        height: height, 
+        width: width
     }
-    
-    const elements = document.querySelectorAll(".cell");
-    for (let y = 0; y < height; y++) {
-        for (let x = 0;  x < width; x++) {
-            cells[y][x] = elements[x + width * y];
-        }
-    }
-    
-    field.style.gridTemplateColumns = `repeat(${width}, 1fr)`;
-    field.style.gridTemplateRows = `repeat(${height}, 1fr)`;
-    
-    
-    field.style.width = `${width * (cellSize + 5)}px`
-    field.style.height = `${height * (cellSize + 5)}px`;
-    
-    
-    for (let y = 0; y < height; y++) {
-        grid.push([]);
-        for (let x = 0;  x < width; x++) {
-            grid[y].push(0);
-        }
-    }
-    console.log("here")
-    cells.forEach((row) => row.forEach((cell) => cell.addEventListener("click", generateMines)));
-    
 }
 
 const onSizeOptionChange = (event) => {
@@ -321,7 +335,19 @@ const onDifficultyOptionChange = (event) => {
     event.currentTarget.classList.add("settings__option__selected");
 }
 
+const toggleFlag = (event) => {
+    const classList = event.currentTarget.classList;
+    if (classList.contains("flag__checkbox--selected")) {
+        classList.remove("flag__checkbox--selected");
+        console.log("removed selected")
+    } else {
+        classList.add("flag__checkbox--selected");
+        console.log("added selected")
+    }
+}
 
 generateButton.addEventListener("click", generateGrid);
 sizeOptions.forEach((option) => option.addEventListener("click", onSizeOptionChange))
 difficultyOptions.forEach((option) => option.addEventListener("click", onDifficultyOptionChange))
+flag.addEventListener("click", toggleFlag)
+

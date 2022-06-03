@@ -36,6 +36,11 @@
         background-color: rgb(80, 80, 80);
     }
 
+    &--mine--end {
+        background-image: url("./data/mine.png");
+        background-size: $cell-size $cell-size;
+    }
+
     &--0 {
         p {
             visibility: hidden;
@@ -75,4 +80,3 @@
         color: rgb(83, 83, 83);
     }
 }
-
