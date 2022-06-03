@@ -4,10 +4,9 @@ import "./styles.scss";
 import {explode} from '@ddlab/bomb';
 
 const field = document.querySelector(".field");
+const sizeOptions = querySelectorAll(".size-option")
+const difficultyOptions = querySelectorAll(".difficulty-option")
 const generateButton = document.querySelector("#generate-button");
-const heightInput = document.querySelector("#height");
-const widthInput = document.querySelector("#width");
-const minesInput = document.querySelector("#mines");
 
 let numOfMines = 0;
 const grid = [];
@@ -59,7 +58,8 @@ const isIn = (coords, coordsList) => {
 }
 
 const generateMines = (event) => {
-    
+    const minesInput = document.querySelector("#mines");
+    numOfMines = minesInput.value;
     const click = getCoordinates(event.target, cells);
 
     //generateMines
@@ -181,6 +181,7 @@ const onMine = () => {
     console.log("mine!")
     
     
+    
     cells.forEach((row) => row.forEach((cell) => {
         console.log("here!")
         if (cell.classList.contains("cell--unopened")) {
@@ -218,22 +219,17 @@ const onMine = () => {
 }
 
 const generateGrid = (event) => {
-    
-
-
-
-
-
-
-
 
     generateButton.removeEventListener("click", generateGrid);
-    const form = document.querySelector(".form");
+    const form = document.querySelector(".settings");
+    const heightInput = document.querySelector("#height");
+    const widthInput = document.querySelector("#width");
     form.style.display = "none";
+    document.querySelector(".flag").style.display = "flex";
     console.log("generating grid")
     height = heightInput.value;
     width = widthInput.value;
-    numOfMines = minesInput.value;
+    
 
     field.style.visibility = "visible";
 
@@ -278,5 +274,5 @@ const generateGrid = (event) => {
 }
 
 
-window.addEventListener('load', () => console.log("hi"))
+
 generateButton.addEventListener("click", generateGrid)

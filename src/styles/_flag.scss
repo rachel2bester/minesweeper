@@ -1,0 +1,34 @@
+@use "./variables" as *;
+@use "./mixin" as *;
+
+
+.flag {
+    // display: none;
+    display: flex;
+    width: 80%;
+    justify-content: space-around;
+    color: white;
+    align-items: center;
+    margin: 15px;
+
+    &__label {
+        display: none;
+    }
+
+    &__checkbox {
+        background-image: url('./data/Minesweeper_flag.svg');
+        width: 40px;
+        height: 40px;
+        background-size: 34px 34px;
+        border: 3px black solid;
+
+        &--selected {
+            border: 3px red solid;
+        }
+    }
+
+    &__left {
+        font-family: $primary-font;
+        font-size: 30px;
+    }
+}

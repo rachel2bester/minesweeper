@@ -12,11 +12,11 @@
     <div class="settings">
         <h2 class="settings__heading">Size</h2>
         <div class="settings__size">
-            <div class="settings__size__small settings__option ">Small</div>
-            <div class="settings__size__medium settings__option">Medium</div>
-            <div class="settings__size__large settings__option">Large</div>
-            <div class="settings__size__fit-to-screen settings__option " >Fit to Screen</div>
-            <div class="settings__size__custom settings__option settings__option__selected">
+            <div class="settings__size__small settings__option size-option settings__option__selected">Small</div>
+            <div class="settings__size__medium settings__option size-option">Medium</div>
+            <div class="settings__size__large settings__option size-option">Large</div>
+            <div class="settings__size__fit-to-screen settings__option size-option" >Fit to Screen</div>
+            <div class="settings__size__custom settings__option size-option">
                 <div>Custom</div>
                 <div class="settings__custom-settings">
                     <div>
@@ -32,10 +32,10 @@
         </div>
         <h3 class="settings__heading">Difficulty</h3>
         <div class="settings__difficulty">
-            <div class="settings__difficulty__easy settings__option ">Easy</div>
-            <div class="settings__difficulty__medium settings__option">Medium</div>
-            <div class="settings__difficulty__hard settings__option">Hard</div>
-            <div class="settings__difficulty__custom settings__option settings__option__selected">
+            <div class="settings__difficulty__easy settings__option difficulty-option">Easy</div>
+            <div class="settings__difficulty__medium settings__option difficulty-option">Medium</div>
+            <div class="settings__difficulty__hard settings__option difficulty-option">Hard</div>
+            <div class="settings__difficulty__custom settings__option difficulty-option settings__option__selected">
                 <div>Custom</div>
                 <div class="settings__custom-settings">
                     <div>
@@ -49,14 +49,11 @@
     </div>
 
     <div class="flag">
-        <label for="flag">Flag</label>
-        <input type="checkbox" id="flag">
+        <div class="flag__left">100</div>
+        <label for="flag" class="flag__label">Flag</label>
+        <button id="flag" class="flag__checkbox flag__checkbox--selected"></button>
     </div>
 
-
     <div class="field"></div>
-
-<!-- 
-    <script src="script.js"></script> -->
 </body>
 </html>
