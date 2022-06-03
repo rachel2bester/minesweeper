@@ -315,8 +315,8 @@ const getSizeSettings = () => {
             console.log(screen.height + "   " + screen.width)
             break;
         default:
-            height = heightInput.value;
-            width = widthInput.value;
+            height = document.querySelector("#height").value;
+            width = document.querySelector("#width").value;
     }
 
     return {
@@ -351,3 +351,4 @@ sizeOptions.forEach((option) => option.addEventListener("click", onSizeOptionCha
 difficultyOptions.forEach((option) => option.addEventListener("click", onDifficultyOptionChange))
 flag.addEventListener("click", toggleFlag)
 
+//easy 7/100 Medium 15/100 Hard 30/100

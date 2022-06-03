@@ -1,0 +1,32 @@
+@use "./variables" as *;
+@use "./mixin" as *;
+
+.end {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    font-family: $primary-font;
+
+    &__message {
+        color: red;
+        font-size: 30px;
+    }
+    &__button {
+        color: white;
+        padding:5px;
+        margin: 20px;
+        font-size: 20px;
+        align-self: flex-end;
+        background-color: black;
+        border: 4px green solid;
+        font-family: $primary-font;
+
+        &:hover {
+            border: 4px blue solid;
+        }
+
+    }
+
+
+}
