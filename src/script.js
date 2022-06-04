@@ -8,9 +8,10 @@ const sizeOptions = document.querySelectorAll(".size-option");
 const difficultyOptions = document.querySelectorAll(".difficulty-option");
 const generateButton = document.querySelector("#generate-button");
 const flag = document.querySelector("#flag");
+const playAgain = document.querySelector(".end__button");
 
 let numOfMines = 0;
-const grid = [];
+let grid = [];
 const cellSize = 30;
 let height = 0;
 let width = 0;
@@ -356,7 +357,7 @@ const getSizeSettings = () => {
 const getNumOfMines = (height, width) => {
     let difficulty;
     
-    const difficultyOptions = document.querySelectorAll(".difficullty-option");
+    const difficultyOptions = document.querySelectorAll(".difficulty-option");
     for (let i = 0; i < difficultyOptions.length; i++) {
         if (difficultyOptions[i].classList.contains("settings__option__selected")) {
             difficulty = difficultyOptions[i].innerText;
@@ -405,9 +406,24 @@ const toggleFlag = (event) => {
     }
 }
 
+const onPlayAgain = () => {
+    document.querySelector(".flag").style.display = "none";
+    document.querySelector(".flag__left").innerText = "";
+    document.querySelector(".end").style.display = "none";
+    const field = document.querySelector(".field");
+    field.style.width = `0px`;
+    field.style.height = `0px`;
+    field.style.visibility = "hidden";
+    field.innerHTML = "";
+    document.querySelector(".settings").style.display = "flex";
+    grid = [];
+    cells = [];
+   
+    generateButton.addEventListener("click", generateGrid);
+}
+
 generateButton.addEventListener("click", generateGrid);
 sizeOptions.forEach((option) => option.addEventListener("click", onSizeOptionChange))
 difficultyOptions.forEach((option) => option.addEventListener("click", onDifficultyOptionChange))
 flag.addEventListener("click", toggleFlag)
-
-//easy 7/100 Medium 15/100 Hard 30/100
+playAgain.addEventListener("click", onPlayAgain)
