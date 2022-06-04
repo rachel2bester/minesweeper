@@ -2,11 +2,13 @@
 @use "./mixin" as *;
 
 .end {
-    display: flex;
+    display: none;
     width: 100%;
     justify-content: space-around;
+    align-items: center;
     flex-wrap: wrap;
     font-family: $primary-font;
+    margin-top: 20px;
 
     &__message {
         color: red;
@@ -25,7 +27,6 @@
         &:hover {
             border: 4px blue solid;
         }
-
     }
 
 

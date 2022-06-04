@@ -27,7 +27,8 @@ const getCoordinates = (cell, cells) => {
                 }
             }
         }
-    } return 0;
+    } 
+    return 0;
 }
 
 const getSurrounding = (coords, height, width) => {
@@ -36,7 +37,7 @@ const getSurrounding = (coords, height, width) => {
         for (let j = -1; j <= 1; j++) {
             if (!(i === 0 && j === 0) &&
                 coords.y + i >= 0 && coords.y + i < height && 
-                coords.x + j >= 0 && coords.x + j < width) { //if not original cell and within field
+                coords.x + j >= 0 && coords.x + j < width) {
                 const cellCoords = {
                     x: (coords.x + j),
                     y: (coords.y + i)
@@ -45,7 +46,6 @@ const getSurrounding = (coords, height, width) => {
             }
         }
     }
-    //console.log(surroundingArr);
     return surroundingArr;
 }
 
@@ -59,9 +59,11 @@ const isIn = (coords, coordsList) => {
 }
 
 const generateMines = (event) => {
-    const minesInput = document.querySelector("#mines");
-    numOfMines = minesInput.value;
+
+    numOfMines = getNumOfMines(height, width);
     const click = getCoordinates(event.target, cells);
+
+    document.querySelector(".flag__left").innerText = numOfMines;
 
     //generateMines
     for (let i = 0; i < numOfMines; i++){
@@ -92,7 +94,6 @@ const generateMines = (event) => {
             cells[y][x].classList.add(`cell--${grid[y][x] === "x" ? "mine" : grid[y][x]}`)
         }
     }
-    console.log("here")
 
     cells.forEach((row) => row.forEach((cell) => cell.removeEventListener("click", generateMines)));
 
@@ -101,15 +102,18 @@ const generateMines = (event) => {
 }
 
 const onCellClick = (event) => {
+    let flagsLeft = document.querySelector(".flag__left");
     if (flag.classList.contains("flag__checkbox--selected")) {
-        if (event.target.classList.contains("cell--flag")) {
-            event.target.classList.remove("cell--flag");
+        if (event.currentTarget.classList.contains("cell--flag")) {
+            event.currentTarget.classList.remove("cell--flag");
+            flagsLeft.innerText++;
         } else {
-            event.target.classList.add("cell--flag");
+            event.currentTarget.classList.add("cell--flag");
+            flagsLeft.innerText--;
         }
     } else {
-        if (!event.target.classList.contains("cell--flag")) {
-            reveal(event.target);
+        if (!event.currentTarget.classList.contains("cell--flag")) {
+            reveal(event.currentTarget);
         }
     }
 }
@@ -149,35 +153,55 @@ const checkWin = (cells) => {
 
 const onMine = () => {
     console.log("mine!")
-    
+    displayEndMessage("loss")
+
     cells.forEach((row) => row.forEach((cell) => {
         if (cell.classList.contains("cell--unopened")) {
             cell.classList.remove("cell--unopened");
             cell.classList.add("cell--unopened-end");
         }
         if (cell.classList.contains("cell--mine")) {
-
-            explode(cell, {
-                duration: 10000, // animation duration
-                shouldRemoveEl: false, // toggle for element removal from DOM after explosion. default: false
-                distance: 6, // shatter travel distance - multiplier of slice size. default: 2
-                color: "#FF8000",
-                sliceCount: 5, // slice count in one axis. default: 10
-                maxSliceSize: 10, // default: 15
-                shatterClass: 'asdf' // default: none
-            })
-
-            explode(cell, {
-                duration: 10000, // animation duration
-                shouldRemoveEl: false, // toggle for element removal from DOM after explosion. default: false
-                distance: 5, // shatter travel distance - multiplier of slice size. default: 2
-                color: "#FF0000",
-                sliceCount: 5, // slice count in one axis. default: 10
-                maxSliceSize: 10, // default: 15
-                shatterClass: 'asdf' // default: none
-            })
+            explodeCell(cell);
         }
     }));
+}
+
+const displayEndMessage = (result) => {
+    document.querySelector(".end").style.display = "flex";
+    const endMessage = document.querySelector(".end__message");
+    switch (result) {
+        case "loss":
+            endMessage.innerText = "You Lost";
+            endMessage.style.color = "red";
+            break;
+    
+        case "win":
+            endMessage.innerText = "You Won!";
+            endMessage.style.color = "green";
+            break;
+    }
+}
+
+const explodeCell = (cell) => {
+    explode(cell, {
+        duration: 10000, // animation duration
+        shouldRemoveEl: false, // toggle for element removal from DOM after explosion. default: false
+        distance: 10, // shatter travel distance - multiplier of slice size. default: 2
+        color: "#FF8000",
+        sliceCount: 5, // slice count in one axis. default: 10
+        maxSliceSize: 10, // default: 15
+        shatterClass: 'asdf' // default: none
+    })
+
+    explode(cell, {
+        duration: 10000, // animation duration
+        shouldRemoveEl: false, // toggle for element removal from DOM after explosion. default: false
+        distance: 5, // shatter travel distance - multiplier of slice size. default: 2
+        color: "#FF0000",
+        sliceCount: 5, // slice count in one axis. default: 10
+        maxSliceSize: 10, // default: 15
+        shatterClass: 'asdf' // default: none
+    })
 }
 
 const onWin = (cells) => {
@@ -187,6 +211,11 @@ const onWin = (cells) => {
         }
     }))
 
+    displayEndMessage("win");
+    lotsOfConfetti();
+}
+
+const lotsOfConfetti = () => {
     confetti({
         particleCount: 200,
         spread: 90,
@@ -229,6 +258,7 @@ const generateGrid = (event) => {
     const form = document.querySelector(".settings");
     form.style.display = "none";
     document.querySelector(".flag").style.display = "flex";
+    
     console.log("generating grid")
     field.style.visibility = "visible";
 
@@ -256,7 +286,6 @@ const generateGrid = (event) => {
     field.style.width = `${width * (cellSize + 5)}px`
     field.style.height = `${height * (cellSize + 5)}px`;
     
-
     const elements = document.querySelectorAll(".cell");
     for (let y = 0; y < height; y++) {
         for (let x = 0;  x < width; x++) {
@@ -272,12 +301,11 @@ const generateGrid = (event) => {
     }
 
     cells.forEach((row) => row.forEach((cell) => cell.addEventListener("click", generateMines)));
-    
 }
-
 
 const getSizeSettings = () => {
     let sizeSetting = "";
+    const sizeOptions = document.querySelectorAll(".size-option");
 
     for (let i = 0; i < sizeOptions.length; i++) {
         if (sizeOptions[i].classList.contains("settings__option__selected")) {
@@ -323,6 +351,37 @@ const getSizeSettings = () => {
         height: height, 
         width: width
     }
+}
+
+const getNumOfMines = (height, width) => {
+    let difficulty;
+    
+    const difficultyOptions = document.querySelectorAll(".difficullty-option");
+    for (let i = 0; i < difficultyOptions.length; i++) {
+        if (difficultyOptions[i].classList.contains("settings__option__selected")) {
+            difficulty = difficultyOptions[i].innerText;
+            break;
+        }
+    }
+
+    let numOfMines;
+    const numOfCells = height * width;
+
+    switch(difficulty) {
+        case "Easy":
+            numOfMines = Math.floor(numOfCells * 7.5 / 100)
+            break;
+        case "Medium":
+            numOfMines = Math.floor(numOfCells * 15 / 100);
+            break;
+        case "Hard":
+            numOfMines = Math.floor(numOfCells * 30 / 100)
+            break;
+        default:
+            numOfMines = document.querySelector("#mines").value;
+    }
+
+    return numOfMines;
 }
 
 const onSizeOptionChange = (event) => {
